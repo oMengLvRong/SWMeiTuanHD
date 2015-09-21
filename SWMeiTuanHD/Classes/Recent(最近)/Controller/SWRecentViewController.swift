@@ -1,0 +1,242 @@
+//
+//  SWRecentViewController.swift
+//  SWMeiTuanHD
+//
+//  Created by integrated on 9/15/15.
+//  Copyright (c) 2015 integrated. All rights reserved.
+//
+
+import UIKit
+
+class SWRecentViewController: UICollectionViewController {
+
+    let recentReuseIdentifier = "recentReuseIdentifier"
+    
+    let doneTitle = "完成"
+    let editTitle = "编辑"
+    
+    var curPage = Int()
+    
+    lazy var backItem: UIBarButtonItem = {
+        return UIBarButtonItem(target: self, action: "back", imageUrl: "icon_back", selectImageUrl: "icon_back_highlighted")
+        }()
+    
+    lazy var selectAllItem: UIBarButtonItem = {
+        return UIBarButtonItem(title: " 全选 ", style: UIBarButtonItemStyle.Done, target: self, action: "selectAll")
+        }()
+    
+    lazy var unselectAllItem: UIBarButtonItem = {
+        return UIBarButtonItem(title: " 全不选 ", style: UIBarButtonItemStyle.Done, target: self, action: "unselectAll")
+        }()
+    
+    lazy var removeItem: UIBarButtonItem = {
+        return UIBarButtonItem(title: " 删除 ", style: UIBarButtonItemStyle.Done, target: self, action: "remove")
+        }()
+    
+    lazy var editItem: UIBarButtonItem = {
+        [unowned self] in
+        return UIBarButtonItem(title: self.editTitle, style: UIBarButtonItemStyle.Done, target: self, action: "edit:")
+        }()
+    
+    lazy var deals: [SWDeal] = {
+        return []
+        }()
+    
+    lazy var noDataView: UIImageView = {
+        [unowned self] in
+        let v = UIImageView(image: UIImage(named: "icon_latestBrowse_empty"))
+        self.view.addSubview(v)
+        v.frame = self.collectionView!.backgroundView!.bounds
+        v.hidden = true
+        return v
+    }()
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    // 这是一个便利构造器
+    convenience init() {
+        let layout = UICollectionViewFlowLayout()
+        layout.itemSize = CGSizeMake(305, 305)
+        
+        let cols: CGFloat = (UIScreen.mainScreen().bounds.width == 1024) ? 3 : 2
+        
+        let inset = (UIScreen.mainScreen().bounds.width - cols * layout.itemSize.width) / (cols + 1)
+        
+        layout.sectionInset = UIEdgeInsetsMake(inset, inset, inset, inset)
+        
+        layout.minimumLineSpacing = inset
+        
+        self.init(collectionViewLayout: layout)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.collectionView?.registerNib(UINib(nibName: "SWDealCell", bundle: nil), forCellWithReuseIdentifier: recentReuseIdentifier)
+        
+        title = "最近浏览的团购"
+        collectionView?.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1.0)
+
+        navigationItem.leftBarButtonItems = [backItem]
+        // Do any additional setup after loading the view.
+        
+        // 读取数据
+        loadMoreDeals()
+        
+        // 监听收藏状态改变
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "recentStateChanged", name: SWRecentStateDidChangedNotification, object: nil)
+        
+        // 添加上拉刷新
+        collectionView?.alwaysBounceVertical = true
+        collectionView?.addFooterWithTarget(self, action: "loadMoreDeals")
+        
+        navigationItem.rightBarButtonItems = [editItem]
+    }
+
+    func recentStateChanged() {
+        curPage = 0
+        deals.removeAll(keepCapacity: false)
+        collectionView?.reloadData()
+    }
+    
+    func loadMoreDeals() {
+        // 修改页面
+        curPage++
+        
+        // 增加数据
+        deals += SWDealTool.shareInstance.recentDeals(curPage)
+        
+        // 刷新表格
+        collectionView?.reloadData()
+        
+        // 结束刷新
+        collectionView?.footerEndRefreshing()
+    }
+    
+    func back() {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func edit(sender: UIBarButtonItem) {
+        if sender.title == editTitle {
+            sender.title = doneTitle
+            
+            // 设置左侧导航栏出现按钮
+            navigationItem.leftBarButtonItems = [backItem, selectAllItem, unselectAllItem, removeItem]
+            
+            // 设置cell进入编辑选项
+            for deal in deals {
+                deal.edit = true
+            }
+            
+            removeItem.enabled = false
+            
+        } else {
+            sender.title = editTitle
+            
+            navigationItem.leftBarButtonItems = [backItem]
+            
+            for deal in deals {
+                deal.edit = false
+            }
+        }
+        collectionView?.reloadData()
+    }
+    
+    func selectAll() {
+        for deal in deals {
+            deal.checking = true
+        }
+        collectionView?.reloadData()
+        
+        selectAllItem.enabled = false
+    }
+    
+    func unSelectAll() {
+        for deal in deals {
+            deal.checking = false
+        }
+        collectionView?.reloadData()
+        
+        unselectAllItem.enabled = false
+    }
+    
+    func remove() {
+        var needRemoveDeals = [SWDeal]()
+        for deal in deals {
+            if deal.checking {
+                needRemoveDeals.append(deal)
+                SWDealTool.shareInstance.removeRecentDeal(deal)
+            }
+        }
+        
+        // 删除当前数据源中的数据
+        for willRemove in needRemoveDeals {
+            let index = find(deals, willRemove)
+            deals.removeAtIndex(index!)
+        }
+        
+        removeItem.enabled = false
+        
+        collectionView?.reloadData()
+    }
+}
+
+// MARK: - UICollectionViewDelegate 代理事件
+
+extension SWRecentViewController: UICollectionViewDelegate {
+    override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        let vc = SWDetailViewController()
+        vc.modalPresentationStyle = UIModalPresentationStyle.FullScreen
+        vc.modalTransitionStyle = UIModalTransitionStyle.CoverVertical
+        vc.deal = deals[indexPath.row]
+        presentViewController(vc, animated: true, completion: nil)
+        
+    }
+}
+
+
+// MARK: - UICollectionViewDataSource 代理事件
+
+extension SWRecentViewController: UICollectionViewDataSource {
+    override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+        //#warning Incomplete method implementation -- Return the number of sections
+        return 1
+    }
+    
+    
+    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        //#warning Incomplete method implementation -- Return the number of items in the section
+        return deals.count
+    }
+    
+    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(recentReuseIdentifier, forIndexPath: indexPath) as! SWDealCell
+        
+        // Configure the cell
+        cell.setDeal(deals[indexPath.row])
+        cell.delegate = self
+        
+        return cell
+    }
+}
+
+// MARK: - SWDealCellDelegate 代理事件
+
+extension SWRecentViewController: SWDealCellDelegate {
+    func dealCoverClick(sender: SWDealCell) {
+        
+        var hasChecking = false
+        
+        for deal in deals {
+            if deal.checking {
+                hasChecking = true
+                break
+            }
+        }
+        
+        removeItem.enabled = hasChecking
+    }
+}

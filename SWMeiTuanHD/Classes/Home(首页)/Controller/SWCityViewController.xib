@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7702" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SWCityViewController" customModule="SWMeiTuanHD" customModuleProvider="target">
+            <connections>
+                <outlet property="cover" destination="zdv-Au-p5I" id="N9E-Sv-Tq9"/>
+                <outlet property="searchBar" destination="vIu-Mr-NcW" id="A2e-vE-EvJ"/>
+                <outlet property="searchDisplayController" destination="yya-Mf-Q1t" id="wc8-d0-3B7"/>
+                <outlet property="tableView" destination="QZS-n6-rYo" id="crR-Tk-VLn"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <searchBar contentMode="redraw" placeholder="请输入城市名称" translatesAutoresizingMaskIntoConstraints="NO" id="vIu-Mr-NcW">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="mr4-JJ-vUv"/>
+                    </connections>
+                </searchBar>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="QZS-n6-rYo">
+                    <rect key="frame" x="0.0" y="44" width="600" height="556"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="2fe-bg-tTP"/>
+                        <outlet property="delegate" destination="-1" id="q1t-Zj-QdC"/>
+                    </connections>
+                </tableView>
+                <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zdv-Au-p5I" userLabel="Cover">
+                    <rect key="frame" x="0.0" y="65" width="600" height="535"/>
+                    <state key="normal">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="coverClicked:" destination="-1" eventType="touchUpInside" id="N6i-LF-FqI"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="zdv-Au-p5I" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="5r2-NF-1TM"/>
+                <constraint firstAttribute="trailing" secondItem="QZS-n6-rYo" secondAttribute="trailing" id="8wm-01-Dih"/>
+                <constraint firstAttribute="bottom" secondItem="zdv-Au-p5I" secondAttribute="bottom" id="M8G-wW-mzT"/>
+                <constraint firstItem="vIu-Mr-NcW" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Nng-5V-k6C"/>
+                <constraint firstItem="vIu-Mr-NcW" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="OuM-ZT-93a"/>
+                <constraint firstAttribute="bottom" secondItem="QZS-n6-rYo" secondAttribute="bottom" id="XJv-Rw-rwa"/>
+                <constraint firstItem="QZS-n6-rYo" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="cGF-BI-IS3"/>
+                <constraint firstAttribute="trailing" secondItem="zdv-Au-p5I" secondAttribute="trailing" id="dT5-by-aTd"/>
+                <constraint firstItem="QZS-n6-rYo" firstAttribute="top" secondItem="vIu-Mr-NcW" secondAttribute="bottom" id="i17-wS-6E7"/>
+                <constraint firstAttribute="trailing" secondItem="vIu-Mr-NcW" secondAttribute="trailing" id="nJl-pl-JC8"/>
+                <constraint firstItem="zdv-Au-p5I" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="65" id="zVi-Sw-VYD"/>
+            </constraints>
+        </view>
+        <searchDisplayController id="yya-Mf-Q1t">
+            <connections>
+                <outlet property="delegate" destination="-1" id="wHl-sP-scn"/>
+                <outlet property="searchContentsController" destination="-1" id="au6-SR-1xA"/>
+                <outlet property="searchResultsDataSource" destination="-1" id="0B4-Mk-ThN"/>
+                <outlet property="searchResultsDelegate" destination="-1" id="ks7-DD-qgi"/>
+            </connections>
+        </searchDisplayController>
+    </objects>
+</document>
