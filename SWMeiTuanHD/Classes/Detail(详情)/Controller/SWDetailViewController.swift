@@ -65,7 +65,10 @@ class SWDetailViewController: UIViewController {
             MBProgressHUD.showSuccess("收藏成功")
             
             SWDealTool.shareInstance.addCollectDeal(deal)
+            
         }
+        
+        NSNotificationCenter.defaultCenter().postNotificationName(SWCollectStateDidChangeNotification, object: nil)
         
         sender.selected = !sender.selected
         
@@ -81,6 +84,8 @@ class SWDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        UIDevice.currentDevice().setValue(UIInterfaceOrientation.LandscapeLeft.rawValue, forKey: "orientation")
         
         webView.delegate = self
         
@@ -120,6 +125,7 @@ class SWDetailViewController: UIViewController {
         
         // 6.发送最近浏览deal改变事件
         NSNotificationCenter.defaultCenter().postNotificationName(SWRecentStateDidChangedNotification, object: nil)
+        SWDealTool.shareInstance.removeRecentDeal(deal)
         SWDealTool.shareInstance.addRecentDeal(deal)
     }
 
@@ -142,7 +148,6 @@ extension SWDetailViewController {
 
 extension SWDetailViewController: DPRequestDelegate {
     func request(request: DPRequest!, didFinishLoadingWithResult result: AnyObject!) {
-        println(result)
         if let r = result as? Dictionary<String,AnyObject>, e = r["deals"] as? Array<Dictionary<String, AnyObject>>, s = e.first {
             deal = SWDeal(dictionary: s)
         }

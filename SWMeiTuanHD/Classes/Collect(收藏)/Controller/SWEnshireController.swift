@@ -26,7 +26,7 @@ class SWEnshireController: UICollectionViewController {
     }()
     
     lazy var unselectAllItem: UIBarButtonItem = {
-        return UIBarButtonItem(title: " 全不选 ", style: UIBarButtonItemStyle.Done, target: self, action: "unselectAll")
+        return UIBarButtonItem(title: " 全不选 ", style: UIBarButtonItemStyle.Done, target: self, action: "unSelectAll")
     }()
     
     lazy var removeItem: UIBarButtonItem = {
@@ -132,6 +132,8 @@ class SWEnshireController: UICollectionViewController {
         collectionView?.reloadData()
         
         selectAllItem.enabled = false
+        unselectAllItem.enabled = true
+        removeItem.enabled = true
     }
     
     func unSelectAll() {
@@ -141,6 +143,8 @@ class SWEnshireController: UICollectionViewController {
         collectionView?.reloadData()
         
         unselectAllItem.enabled = false
+        selectAllItem.enabled = true
+        removeItem.enabled = false
     }
     
     func remove() {
@@ -161,6 +165,11 @@ class SWEnshireController: UICollectionViewController {
         removeItem.enabled = false
         
         collectionView?.reloadData()
+        
+        if collectionView?.numberOfItemsInSection(0) == 0 {
+            selectAllItem.enabled = false
+            unselectAllItem.enabled = false
+        }
     }
     
     func loadMoreDeals() {

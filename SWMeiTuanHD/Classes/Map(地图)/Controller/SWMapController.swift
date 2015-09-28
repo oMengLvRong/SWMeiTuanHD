@@ -40,6 +40,10 @@ class SWMapController: UIViewController {
     
     private var category: String!
     
+    private var selectedCategory: String!
+    
+    private var selectedSubCategory: String!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -68,6 +72,7 @@ class SWMapController: UIViewController {
     
     func categoryDidChange(notification: NSNotification) {
         
+        // 1. 关闭popover
         self.mapView.removeAnnotations(self.mapView.annotations)
         
         if let sub = notification.userInfo?[SWSelectedSubCategory] as? String {
@@ -76,9 +81,29 @@ class SWMapController: UIViewController {
             category = notification.userInfo?[SWSelectedCategory] as? String
         }
         
-        mapView(self.mapView, regionDidChangeAnimated: true)
+        // 2. 设置顶部文字 和 category参数
+        selectedCategory = notification.userInfo?[SWSelectedCategory] as! String
+        selectedSubCategory = notification.userInfo?[SWSelectedSubCategory] as? String
         
-        // 设置顶部文字
+        // 更换顶部区域category的文字
+        let topItem = categoryItem.customView as! SWTopItem
+        topItem.setTitle(Text: selectedCategory)
+        category = selectedCategory
+        
+        // 更换顶部区域sub category文字
+        if (selectedSubCategory == nil) || (selectedSubCategory == "全部"){
+            topItem.setSubTitle(Text: "")
+        } else {
+            topItem.setSubTitle(Text: selectedSubCategory!)
+            category = selectedSubCategory
+        }
+        
+        // 3. 清空annotataions
+        self.mapView.removeAnnotations(self.mapView.annotations)
+        
+        // 4. 再次发送请求
+        mapView(self.mapView, regionDidChangeAnimated: true)
+
     }
     
     func categoryClicked() {
@@ -108,6 +133,33 @@ extension SWMapController: CLLocationManagerDelegate {
 
 extension SWMapController: MKMapViewDelegate {
     
+    
+    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+        if (annotation is MKUserLocation) {
+            //if annotation is not an MKPointAnnotation (eg. MKUserLocation),
+            //return nil so map draws default view for it (eg. blue dot)...
+            return nil
+        }
+        
+        let reuseId = "test"
+        
+        var anView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId)
+        if anView == nil {
+            anView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+            anView.canShowCallout = true
+        }
+        else {
+            //we are re-using a view, update its annotation reference...
+            anView.annotation = annotation
+        }
+        
+        if let icon = annotation as? SWAnnotation where icon.icon != "" {
+            anView.image = UIImage(named: icon.icon)
+        }
+        
+        return anView
+    }
+    
     // 用户位置更新时调用(第一次定位)
     func mapView(mapView: MKMapView!, didUpdateUserLocation userLocation: MKUserLocation!) {
         
@@ -132,8 +184,12 @@ extension SWMapController: MKMapViewDelegate {
 
             // 这个是城市
             if let locationCity = placeMark.addressDictionary["City"] as? NSString{
-                println(locationCity)
-                self.city = locationCity.substringToIndex(locationCity.length - 1)
+                
+//                if locationCity.length == 3 {
+//                    self.city = locationCity.substringToIndex(locationCity.length - 1)
+//                } else {
+                    self.city = locationCity as! String
+//                }
             }
             
             // 省份
@@ -166,27 +222,7 @@ extension SWMapController: MKMapViewDelegate {
         
     }
     
-    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
-        
-        if annotation is MKAnnotation.Type {
-        } else {
-            return MKAnnotationView()
-        }
-        
-        let id = "dealId"
-        var anno = mapView.dequeueReusableAnnotationViewWithIdentifier(id)
-        if anno == nil {
-            anno = MKAnnotationView(annotation: nil, reuseIdentifier: id)
-            anno.canShowCallout = true
-        }
-        
-        anno.annotation = annotation
-        
-        anno.image = UIImage(named: (annotation as! SWAnnotation).icon)
-        
-        return anno
     }
-}
 
 extension SWMapController: DPRequestDelegate {
     func request(request: DPRequest!, didFinishLoadingWithResult result: AnyObject!) {
@@ -221,11 +257,11 @@ extension SWMapController: DPRequestDelegate {
                     anno = SWAnnotation(coordinate: CLLocationCoordinate2D(latitude: Double(business.latitude), longitude: Double(business.longitude)), title: business.name, deal.title)
                 }
                 
-                if contains(mapView.annotations as! [SWAnnotation], anno) {
-                
-                } else {
+//                if contains(mapView.annotations as! [SWAnnotation], anno) {
+//                
+//                } else {
                     mapView.addAnnotation(anno)
-                }
+//                }
             }
         }
 
@@ -237,8 +273,3 @@ extension SWMapController: DPRequestDelegate {
     }
 }
 
-extension Array {
-    func contains<T where T : Equatable>(obj: T) -> Bool {
-        return self.filter({$0 as? T == obj}).count > 0
-    }
-}

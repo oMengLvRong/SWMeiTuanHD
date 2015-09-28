@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>B51556EF-385B-4638-9AB7-A5A14E99700A</string>
+	<key>IDESourceControlProjectName</key>
+	<string>SWMeiTuanHD</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>082BBD942EDB28A78048DBC337CEA169F75FF53E</key>
+		<string>https://github.com/oMengLvRong/SWMeiTuanHD.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>SWMeiTuanHD.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>082BBD942EDB28A78048DBC337CEA169F75FF53E</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/oMengLvRong/SWMeiTuanHD.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>082BBD942EDB28A78048DBC337CEA169F75FF53E</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>082BBD942EDB28A78048DBC337CEA169F75FF53E</string>
+			<key>IDESourceControlWCCName</key>
+			<string>SWMeiTuanHD</string>
+		</dict>
+	</array>
+</dict>
+</plist>

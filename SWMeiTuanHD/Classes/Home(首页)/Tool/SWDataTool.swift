@@ -27,13 +27,14 @@ class SWDataTool: NSObject {
         var category: SWCategory?
         
         let cs = self.categories
-        for name in deal.categories {
-            for c in cs {
-                if name == c.name {
-                    return c
-                }
-                if let sub = c.subcategories {
-                    if contains(sub, name) {
+        let name = deal.categories.first
+        for c in cs {
+            if name == c.name {
+                return c
+            }
+            if let sub = c.subcategories {
+                if let n = name {
+                    if contains(sub, n) {
                         return c
                     }
                 }

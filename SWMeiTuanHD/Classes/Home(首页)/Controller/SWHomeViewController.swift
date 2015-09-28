@@ -65,9 +65,9 @@ class SWHomeViewController: SWCollectionViewController {
         
         // 2.周边按钮
         let item0 = AwesomeMenuItem(image: UIImage(named: "bg_pathMenu_black_normal"), highlightedImage: nil, contentImage: UIImage(named: "icon_pathMenu_collect_normal"), highlightedContentImage: UIImage(named: "icon_pathMenu_collect_highlighted"))
-        let item1 = AwesomeMenuItem(image: UIImage(named: "bg_pathMenu_black_normal"), highlightedImage: nil, contentImage: UIImage(named: "icon_pathMenu_collect_normal"), highlightedContentImage: UIImage(named: "icon_pathMenu_collect_highlighted"))
-        let item2 = AwesomeMenuItem(image: UIImage(named: "bg_pathMenu_black_normal"), highlightedImage: nil, contentImage: UIImage(named: "icon_pathMenu_collect_normal"), highlightedContentImage: UIImage(named: "icon_pathMenu_collect_highlighted"))
-        let item3 = AwesomeMenuItem(image: UIImage(named: "bg_pathMenu_black_normal"), highlightedImage: nil, contentImage: UIImage(named: "icon_pathMenu_collect_normal"), highlightedContentImage: UIImage(named: "icon_pathMenu_collect_highlighted"))
+        let item1 = AwesomeMenuItem(image: UIImage(named: "bg_pathMenu_black_normal"), highlightedImage: nil, contentImage: UIImage(named: "icon_pathMenu_scan_normal"), highlightedContentImage: UIImage(named: "icon_pathMenu_scan_highlighted"))
+        let item2 = AwesomeMenuItem(image: UIImage(named: "bg_pathMenu_black_normal"), highlightedImage: nil, contentImage: UIImage(named: "icon_pathMenu_mine_normal"), highlightedContentImage: UIImage(named: "icon_pathMenu_mine_highlighted"))
+        let item3 = AwesomeMenuItem(image: UIImage(named: "bg_pathMenu_black_normal"), highlightedImage: nil, contentImage: UIImage(named: "icon_pathMenu_more_normal"), highlightedContentImage: UIImage(named: "icon_pathMenu_more_highlighted"))
         
         let items = [item0, item1, item2, item3]
         
